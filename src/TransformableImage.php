@@ -4,18 +4,16 @@ namespace Ctessier\NovaAdvancedImageField;
 
 use Illuminate\Http\UploadedFile;
 use Intervention\Image\Facades\Image;
+use Intervention\Image\ImageManager;
 
 trait TransformableImage
 {
     /**
      * The driver library to use for transforming the image.
      *
-     * This value will override the driver configured for Intervention
-     * in the `config/image.php` file of the Laravel project.
-     *
      * @var string|null
      */
-    private $driver = null;
+    private $driver = \Intervention\Image\Drivers\Gd\Driver::class;
 
     /**
      * Indicates if the image is croppable.
@@ -206,7 +204,9 @@ trait TransformableImage
             return;
         }
 
-        $this->image = Image::make($uploadedFile->getPathName());
+        $manager = ImageManager::withDriver($this->driver);
+
+        $this->image = $manager->read($uploadedFile->getPathName());
 
         if ($this->autoOrientate) {
             $this->orientateImage();
@@ -225,7 +225,7 @@ trait TransformableImage
         }
 
         $this->image->save($uploadedFile->getPathName(), $this->quality, $this->outputFormat ?? $uploadedFile->getClientOriginalExtension());
-        $this->image->destroy();
+        $this->image = null;
     }
 
     /**

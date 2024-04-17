@@ -1,5 +1,5 @@
 {
-    "name": "ctessier/nova-advanced-image-field",
+    "name": "sulfo/nova-advanced-image-field",
     "description": "An advanced image field for Nova with cropping and resizing.",
     "keywords": [
         "laravel",
@@ -15,8 +15,8 @@
     ],
     "license": "MIT",
     "require": {
-        "php": "^7.3|^8.0",
-        "intervention/image": "^2.7",
+        "php": "^8.1",
+        "intervention/image": "^3.5",
         "laravel/nova": "^4.0"
     },
     "autoload": {

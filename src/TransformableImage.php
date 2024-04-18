@@ -44,13 +44,6 @@ trait TransformableImage
     private $height;
 
     /**
-     * Indicates if the image is orientable.
-     *
-     * @var bool
-     */
-    private $autoOrientate = false;
-
-    /**
      * The quality of the resulting image.
      *
      * @var int
@@ -129,26 +122,6 @@ trait TransformableImage
     }
 
     /**
-     * Specify if the underlying image should be orientated.
-     * Rotate the image to the orientation specified in Exif data, if any. Especially useful for smartphones.
-     * This method requires the exif extension to be enabled in your php settings.
-     *
-     * @throws \Exception
-     *
-     * @return $this
-     */
-    public function autoOrientate()
-    {
-        if (!extension_loaded('exif')) {
-            throw new \Exception('The PHP exif extension must be enabled to use the autoOrientate method.');
-        }
-
-        $this->autoOrientate = true;
-
-        return $this;
-    }
-
-    /**
      * Specify the resulting quality.
      * This only applies to JPG format since PNG compression is lossless.
      * The value must range from 0 (poor quality, small file) to 100 (best quality, big file).
@@ -208,10 +181,6 @@ trait TransformableImage
 
         $this->image = $manager->read($uploadedFile->getPathName());
 
-        if ($this->autoOrientate) {
-            $this->orientateImage();
-        }
-
         if ($this->croppable && $cropperData) {
             $this->cropImage($cropperData->coordinates);
         }
@@ -251,16 +220,6 @@ trait TransformableImage
             $constraint->upsize();
             $constraint->aspectRatio();
         });
-    }
-
-    /**
-     * Orientate the image based on it's EXIF data.
-     *
-     * @return void
-     */
-    private function orientateImage()
-    {
-        $this->image->orientate();
     }
 
     /**
